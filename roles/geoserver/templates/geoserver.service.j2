@@ -1,0 +1,16 @@
+[Unit]
+Description=GeoServer
+
+[Service]
+User={{user}}
+Environment=JAVA_HOME={{JAVA_HOME}}
+Environment=GEOSERVER_HOME={{geoserver_directory}}/geoserver-{{version}}
+Environment=GEOSERVER_DATA_DIR={{geoserver_data_directory}}
+ExecStart=/bin/bash {{geoserver_directory}}/geoserver-{{version}}/bin/startup.sh
+Restart=always
+RestartSec=10s
+TimeoutStartSec=120
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target

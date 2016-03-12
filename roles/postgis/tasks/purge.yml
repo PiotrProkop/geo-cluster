@@ -1,0 +1,16 @@
+---
+- name: stop postgres
+  service:
+    name: postgresql
+    state: stopped
+
+- name: delete data
+  file:
+    path: /var/lib/pgsql
+    state: absent
+
+- name: remove packages
+  yum:
+    name: "{{item}}"
+    state: absent
+  with_items: "{{packages}}"

@@ -1,0 +1,30 @@
+---
+
+- name: remove packages
+  yum:
+    name: "{{item}}"
+    state: absent
+  with_items: "{{packages}}"
+
+- name: delete geoserver archive
+  file:
+    path: "{{geoserver_directory}}/geoserver-{{version}}-bin.zip"
+    state: absent
+
+- name: delete geoserver binary
+  file:
+    path: "{{geoserver_directory}}/geoserver-{{version}}"
+    state: absent
+
+- name: stop geoserver binary
+  service:
+    name: geoserver
+    state: stopped
+
+- name: delete goeserver systemd unit file
+  file:
+    path: /etc/systemd/system/geoserver.service
+    state: absent
+
+- name: daemon-reload
+  command: systemctl daemon-reload

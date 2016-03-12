@@ -1,0 +1,9 @@
+- hosts: cluster
+  sudo: True
+  roles:
+    - geoserver
+
+- hosts: postgis
+  sudo: True
+  roles:
+    - postgis

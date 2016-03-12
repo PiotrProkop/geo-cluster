@@ -1,0 +1,51 @@
+---
+- name: instal epel-release
+  yum:
+    name: epel-release
+    state: installed
+
+- name: install packages
+  yum:
+    name: "{{item}}"
+    state: installed
+  with_items: "{{packages}}"
+  ignore_errors: true
+
+- name: init db
+  command: /bin/postgresql-setup initdb
+
+- name: start postgres
+  service:
+    name: postgresql
+    state: started
+
+- name: change password
+  command: sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD '{{password}}';"
+  sudo: false
+
+- name: start extensions
+  command: sudo -u postgres psql -c "CREATE EXTENSION {{item}};"
+  with_items: "{{extensions}}"
+  sudo: false
+
+- name: add listen ip
+  lineinfile:
+   line: "listen_addresses = '*'"
+   dest: /var/lib/pgsql/data/postgresql.conf
+  notify:
+    - restart pgsql
+
+- name: add priviledges for local
+  lineinfile:
+   line: "local all postgres md5"
+   insertbefore: "local   all             all*"
+   dest: /var/lib/pgsql/data/pg_hba.conf
+  notify:
+    - restart pgsql
+
+- name: add priviledges for host
+  lineinfile:
+   line: "host all postgres 127.0.0.1/32 md5"
+   dest: /var/lib/pgsql/data/pg_hba.conf
+  notify:
+    - restart pgsql

@@ -1,0 +1,11 @@
+packages:
+  - postgresql-server
+  - postgresql
+  - postgresql-libs
+  - postgresql-contrib
+  - postgresql-devel
+  - postgis
+extensions:
+  - postgis
+  - postgis_topology
+password: postgres

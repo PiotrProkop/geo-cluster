@@ -1,0 +1,14 @@
+---
+action: 'deploy'
+packages:
+  - unzip
+  - wget
+  - git
+  - java-1.8.0-openjdk
+  - java-1.8.0-openjdk-devel
+
+geoserver_directory: /opt/geoserver
+geoserver_data_directory: /var/lib/geoserver
+user: geoserver
+JAVA_HOME: /usr/lib/jvm/java-1.8.0-openjdk
+version: 2.8.2

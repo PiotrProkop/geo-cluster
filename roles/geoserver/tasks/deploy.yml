@@ -1,0 +1,48 @@
+---
+- name: install packages
+  yum:
+    name: "{{item}}"
+    state: installed
+  with_items: "{{packages}}"
+  ignore_errors: true
+
+- name: create /opt/geoserver directory
+  file:
+    path: "{{geoserver_directory}}"
+    state: directory
+
+- name: create /var/lib/geoserver directory
+  file:
+    path: "{{geoserver_data_directory}}"
+    state: directory
+    owner: geoserver
+
+- name: download geoserver binary
+  get_url:
+    url: http://sourceforge.net/projects/geoserver/files/GeoServer/{{version}}/geoserver-{{version}}-bin.zip
+    dest: "{{geoserver_directory}}"
+
+- name: unzip binary
+  unarchive:
+    src: "{{geoserver_directory}}/geoserver-{{version}}-bin.zip"
+    dest: "{{geoserver_directory}}"
+    copy: no
+    owner: "{{user}}"
+
+- name: delete geoserver archive
+  file:
+    path: "{{geoserver_directory}}/geoserver-{{version}}-bin.zip"
+    state: absent
+
+- name: prepare systemd unit file
+  template:
+    src: geoserver.service.j2
+    dest: /etc/systemd/system/geoserver.service
+
+- name: daemon-reload
+  command: systemctl daemon-reload
+
+- name: start geoserver
+  service:
+    name: geoserver
+    state: started

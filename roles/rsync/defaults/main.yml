@@ -1,0 +1,8 @@
+packages:
+  - epel-release
+  - inotify-tools
+geoserver_data_directory: /var/lib/geoserver
+geoserver_directory: /opt/geoserver
+aws: true
+aws_key: 
+user: centos

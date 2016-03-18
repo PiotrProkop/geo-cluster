@@ -1,0 +1,19 @@
+---
+- name: remove packages
+  yum:
+    name: "{{item}}"
+    state: absent
+  with_items: "{{packages}}"
+
+- name: stop synchronize service
+  service:
+    name: synchronize
+    state: stopped
+
+- name: delete synchronize systemd unit file
+  file:
+    path: /etc/systemd/system/synchronize.service
+    state: absent
+
+- name: daemon-reload
+  command: systemctl daemon-reload

@@ -1,0 +1,18 @@
+#!/bin/bash
+{% if aws %}
+GEOSERVERS="{% for ip in groups['geoserver'] %}{% if ip != inventory_hostname %}{{hostvars[ip]['ip']}}{% endif %}{% endfor %}"
+{% else %}
+
+{% endif %}
+
+for ip in $GEOSERVERS
+do
+    echo $ip
+    {% if aws %}
+    rsync -az --delete-after -e "ssh -i {{aws_key}}" --exclude "*security*" --exclude "*logs*" {{geoserver_data_directory}}/ {{user}}@$ip:{{geoserver_data_directory}}
+    {% else %}
+    rsync -az --delete-after --exclude "*security*" --exclude "*logs*" {{geoserver_data_directory}}/ {{user}}@{{ip}}:{{geoserver_data_directory}}
+    {% endif %}
+    curl -uadmin:geoserver -XPOST http://$ip:8080/geoserver/rest/reload
+
+done

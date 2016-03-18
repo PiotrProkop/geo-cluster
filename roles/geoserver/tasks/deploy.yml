@@ -10,12 +10,13 @@
   file:
     path: "{{geoserver_directory}}"
     state: directory
+    owner: "{{user}}"
 
 - name: create /var/lib/geoserver directory
   file:
     path: "{{geoserver_data_directory}}"
     state: directory
-    owner: geoserver
+    owner: "{{user}}"
 
 - name: download geoserver binary
   get_url:

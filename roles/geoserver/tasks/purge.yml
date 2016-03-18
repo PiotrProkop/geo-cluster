@@ -1,5 +1,4 @@
 ---
-
 - name: remove packages
   yum:
     name: "{{item}}"
@@ -16,10 +15,15 @@
     path: "{{geoserver_directory}}/geoserver-{{version}}"
     state: absent
 
-- name: stop geoserver binary
+- name: stop geoserver service
   service:
     name: geoserver
     state: stopped
+
+- name: delete security
+  file:
+    path: "{{geoserver_data_directory}}/security"
+    state: absent
 
 - name: delete goeserver systemd unit file
   file:

@@ -1,0 +1,30 @@
+---
+- name: install required packages
+  yum:
+    name: "{{item}}"
+    state: latest
+  with_items: "{{packages}}"
+
+- name: create rsync.sh
+  template:
+    src: rsync.sh.j2
+    dest: "{{geoserver_directory}}/rsync.sh"
+
+- name: create synchronize.sh
+  template:
+    src: synchronize.sh.j2
+    dest: "{{geoserver_directory}}/synchronize.sh"
+
+- name: create synchronize unit file
+  template:
+    src: synchronize.service.j2
+    dest: /etc/systemd/system/synchronize.service
+
+- name: daemon-reload
+  command: systemctl daemon-reload
+
+- name: start synchronize
+  service:
+    name: synchronize
+    state: started
+    enabled: yes

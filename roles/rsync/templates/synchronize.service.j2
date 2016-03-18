@@ -1,0 +1,14 @@
+[Unit]
+Description=GeoServer
+After=geoserver.service
+
+[Service]
+#User={{user}}
+ExecStart=/bin/bash {{geoserver_directory}}/synchronize.sh
+Restart=always
+RestartSec=10s
+TimeoutStartSec=120
+TimeoutStopSec=15
+
+[Install]
+WantedBy=multi-user.target
